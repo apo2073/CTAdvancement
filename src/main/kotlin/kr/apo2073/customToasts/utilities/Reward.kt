@@ -3,10 +3,10 @@ package kr.apo2073.customToasts.utilities
 import org.bukkit.inventory.ItemStack
 
 data class Reward(
-    private val function:String?,
-    private val loots:List<String>?,
-    private val recipes: List<ItemStack>?,
-    private val experience: Int?
+    private val function:String?=null,
+    private val loots:List<String>?=null,
+    private val recipes: List<ItemStack>?=null,
+    private val experience: Int?=null
 ) {
     fun getFunction():String? = function
     fun getLoots():List<String>?= loots
