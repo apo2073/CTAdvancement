@@ -1,0 +1,10 @@
+name: CustomToasts
+version: '1.0'
+main: kr.apo2073.customToasts.CustomToasts
+api-version: '1.20'
+authors: [ 아포칼립스 ]
+commands:
+  toast:
+
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10
