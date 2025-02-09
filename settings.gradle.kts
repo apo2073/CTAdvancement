@@ -1,1 +1,1 @@
-rootProject.name = "CustomToasts"
+rootProject.name = "CTAdvancement"

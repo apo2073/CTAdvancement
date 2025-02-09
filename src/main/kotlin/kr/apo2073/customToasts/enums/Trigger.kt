@@ -60,4 +60,9 @@ enum class Trigger(
     fun getTrigger():String {
         return trigger
     }
+    companion object {
+        fun getByTrigger(trigger: String): Trigger? {
+            return entries.find { it.getTrigger() == trigger }
+        }
+    }
 }

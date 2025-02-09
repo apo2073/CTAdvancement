@@ -1,9 +1,12 @@
-package kr.apo2073.customToasts.utilities
+package kr.apo2073.customToasts.toasts
 
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kr.apo2073.customToasts.enums.Frame
 import kr.apo2073.customToasts.enums.Trigger
+import kr.apo2073.customToasts.utilities.Criteria
+import kr.apo2073.customToasts.utilities.Reward
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -23,7 +26,8 @@ class ToastBuilder(
     private var hidden:Boolean=false,
     private var parent:String?=null,
     private var requirements: MutableList<Criteria>?=null,
-    private var rewards: MutableList<Reward>?=null
+    private var rewards: MutableList<Reward>?=null,
+    private var background:String?="minecraft:textures/gui/advancements/backgrounds/adventure.png"
 ) {
     fun show(player: Player):ToastBuilder {
         try {
@@ -40,9 +44,15 @@ class ToastBuilder(
     fun build():ToastBuilder {
         try {
             plugin.server.unsafe.loadAdvancement(key, toastJson())
-        } catch (e:IllegalArgumentException) {return this}
+        } catch (e:IllegalArgumentException) {
+            plugin.server.unsafe.removeAdvancement(key)
+            Bukkit.reloadData()
+            plugin.server.unsafe.loadAdvancement(key, toastJson())
+            return this
+        }
         return this
     }
+
     fun remove():ToastBuilder {
         plugin.server.unsafe.removeAdvancement(key)
         return this
@@ -65,6 +75,8 @@ class ToastBuilder(
     }
 
     private fun toastJson():String {
+        if (background==null) background="minecraft:textures/gui/advancements/backgrounds/adventure.png"
+
         val json=JsonObject()
 
         val display=JsonObject()
@@ -74,10 +86,7 @@ class ToastBuilder(
         )
         display.addProperty("title", title)
         display.addProperty("description", description)
-        display.addProperty(
-            "background",
-            "minecraft:textures/gui/advancements/backgrounds/adventure.png"
-        )
+        display.addProperty("background", background)
         display.addProperty("frame", frame.toString().lowercase())
         display.addProperty("show_toast", showToasts)
         display.addProperty("announce_to_chat", announceToChat)
@@ -87,13 +96,12 @@ class ToastBuilder(
 
         if (parent!=null) json.addProperty("parent", parent)
 
-        if (requirements==null) {
-            requirements= arrayListOf(Criteria("empties", Trigger.IMPOSSIBLE, null))
-        }
+        if (requirements==null) requirements= arrayListOf(
+            Criteria("empties", Trigger.IMPOSSIBLE, null)
+        )
         val requireArray=JsonArray()
         requirements?.forEach {
             json.add("criteria", it.getJson())
-//            json.addProperty("requirements", it.getName())
             requireArray.add(it.getName())
         }
         json.add("requirements", JsonArray().apply { add(requireArray) })
@@ -105,11 +113,12 @@ class ToastBuilder(
             it.getLoots()?.forEach { lootArray.add(it) }
             if (lootArray.size() > 0) reward.add("loot", lootArray)
             val recipeArray = JsonArray()
-            it.getRecipes()?.forEach { recipeArray.add(it.type.key.toString()) }
+            it.getRecipes()?.forEach { recipeArray.add(it?.type?.key.toString()) }
             if (recipeArray.size() > 0) reward.add("recipes", recipeArray)
             it.getExp()?.let { reward.addProperty("experience", it) }
         }
+        json.add("rewards", reward)
 
-        return json.toString()
+        return GsonBuilder().setPrettyPrinting().create().toJson(json)
     }
 }

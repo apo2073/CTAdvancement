@@ -1,0 +1,25 @@
+finally_end:
+  id: "finally_end"
+  icon: "minecraft:ender_eye"
+  title: "천 리 길도 한 걸음부터"
+  description: "엔더의 눈을 던져, 마지막으로 향하세요."
+  frame: "GOAL"
+  show_toast: true
+  announce_to_chat: true
+  hidden: true
+  parent: "minecraft:end/root"
+
+  criteria:
+    yahhh:
+      trigger: "minecraft:placed_block"
+      conditions: # "{"location":[{"condition":"minecraft:block_state_property","block":"minecraft:white_wool"}]}"
+        location:
+          - condition: "minecraft:block_state_property"
+            block: "minecraft:white_wool"
+    finally_the_end:
+      trigger: "minecraft:used_ender_eye"
+
+  rewards:
+    experience: 100
+    loots:
+      - "minecraft:blocks/diamond_ore"

@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:arrow"
+    },
+    "title": "테스트용",
+    "description": "테스트용입니다",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "offsetX": 87,
+            "offsetY": 65,
+            "offsetZ": 94
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "trigger"
+    ]
+  ],
+  "rewards": {
+    "loot": [
+      "minecraft:blocks/diamond_block"
+    ],
+    "experience": 100
+  }
+}
