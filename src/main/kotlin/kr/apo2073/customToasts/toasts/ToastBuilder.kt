@@ -42,6 +42,7 @@ class ToastBuilder(
     }
 
     fun build():ToastBuilder {
+//        println(toastJson())
         try {
             plugin.server.unsafe.loadAdvancement(key, toastJson())
         } catch (e:IllegalArgumentException) {

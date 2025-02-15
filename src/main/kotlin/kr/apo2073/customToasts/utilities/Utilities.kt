@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets
 
 object Utilities {
     private val plugin=CustomToasts.instance
-    fun loadToasts():Boolean {
+    fun loadToasts(): Boolean {
         plugin.reloadConfig()
         try {
             for (toast in toastList()) {
@@ -33,8 +33,7 @@ object Utilities {
 
     private fun toastList():MutableList<String> {
         plugin.reloadConfig()
-        val list=plugin.config.getStringList("advancement")
-        return list
+        return plugin.config.getStringList("advancement")
     }
 
     private fun load(type: FileType, file: File) {
@@ -61,16 +60,32 @@ object Utilities {
                     recipes = config.getStringList("${fileName}.rewards.recipes").map { getItemStack(it) }
                 )
                 val criteria = mutableListOf<Criteria>()
-                config.getMapList("${fileName}.criteria").forEach { criteriaMap ->
-                    criteriaMap.forEach { (name, data) ->
-                        val dataMap = data as Map<String, Any>
-                        val trigger = Trigger.valueOf(dataMap["trigger"] as String)
-                        val conditionsJson = dataMap["conditions"]?.let {
-                            Gson().fromJson(it as String, JsonObject::class.java)
+                val criteriaSection = config.getConfigurationSection("${fileName}.criteria") ?: return
+                for (name in criteriaSection.getKeys(false)) {
+                    val dataMap = criteriaSection.getConfigurationSection(name)?.getValues(false) ?: continue
+                    val trigger = Trigger.getByTrigger(dataMap["trigger"].toString()) ?: return
+                    val conditionsJson = JsonObject()
+                    println(name)
+
+                    println(dataMap["conditions"])
+                    if (dataMap["conditions"] is Map<*, *>) {
+                        val conditions = dataMap["conditions"] as Map<*, *>
+                        conditions.forEach { (key, value) ->
+                            when (value) {
+                                is Map<*, *> -> {
+                                    val innerJson = JsonObject()
+                                    value.forEach { (k, v) ->
+                                        innerJson.addProperty(k.toString(), v.toString())
+                                    }
+                                    conditionsJson.add(key.toString(), innerJson)
+                                }
+                                else -> conditionsJson.addProperty(key.toString(), value.toString())
+                            }
                         }
-                        criteria.add(Criteria(name.toString(), trigger, conditionsJson))
                     }
-                } // 안됨
+
+                    criteria.add(Criteria(name, trigger, conditionsJson))
+                }
 
                 ToastBuilder(
                     plugin, key,
@@ -95,8 +110,10 @@ object Utilities {
     }
 
     private fun getItemStack(key:String) : ItemStack? {
-        return ItemStack(Material.getMaterial(key.removePrefix("minecraft:").uppercase())
-            ?: run { return null })
+        return ItemStack(
+            Material.getMaterial(key.removePrefix("minecraft:").uppercase())
+            ?: run { return null }
+        )
     }
 
     enum class FileType {
