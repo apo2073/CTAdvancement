@@ -26,6 +26,10 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
         }
         if (p3.size==1) {
             if (p3[0]=="reload") {
+                if (!p0.hasPermission("apo.cta.reload")) {
+                    p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+                    return true
+                }
                 if (loadToasts()) {
                     p0.sendMessage(prefix.append("§l리로드를 완료했습니다".str2Component()))
                 } else {
@@ -69,6 +73,10 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
     }
 
     private fun loadToast(p0: CommandSender, toast: String) {
+        if (!p0.hasPermission("apo.cta.load")) {
+            p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+            return
+        }
         if (loadToasts(toast)) {
             p0.sendMessage(prefix.append("§l로드를 완료했습니다".str2Component()))
         } else {
@@ -77,6 +85,10 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
     }
 
     private fun removeToast(p0: CommandSender, toast: String) {
+        if (!p0.hasPermission("apo.cta.remove")) {
+            p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+            return
+        }
         try {
             plugin.server.unsafe.removeAdvancement(
                 NamespacedKey(plugin, toast
