@@ -6,17 +6,16 @@ finally_end:
   frame: "GOAL"
   show_toast: true
   announce_to_chat: true
-  hidden: true
+  hidden: false
   parent: "minecraft:end/root"
 
-  # "{"location":[{"condition":"minecraft:block_state_property","block":"minecraft:white_wool"}]}"
   criteria:
-    place:
-      trigger: "minecraft:placed_block"
-      conditions:
-        location:
-          condition: "minecraft:block_state_property"
-          block: "minecraft:white_wool"
+#    place:
+#      trigger: "minecraft:placed_block"
+#      conditions:
+#        location:
+#          - condition: "minecraft:block_state_property"
+#            block: "minecraft:white_wool"
     finally_the_end:
       trigger: "minecraft:used_ender_eye"
 

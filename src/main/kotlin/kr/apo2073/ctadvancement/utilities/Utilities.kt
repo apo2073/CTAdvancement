@@ -1,28 +1,38 @@
-package kr.apo2073.customToasts.utilities
+package kr.apo2073.ctadvancement.utilities
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
-import kr.apo2073.customToasts.CustomToasts
-import kr.apo2073.customToasts.enums.Frame
-import kr.apo2073.customToasts.enums.Trigger
-import kr.apo2073.customToasts.toasts.ToastBuilder
+import kr.apo2073.ctadvancement.CTA
+import kr.apo2073.ctadvancement.enums.Frame
+import kr.apo2073.ctadvancement.enums.Trigger
+import kr.apo2073.ctadvancement.toasts.ToastBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
+import org.bukkit.configuration.MemorySection
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.inventory.ItemStack
 import java.io.File
 import java.nio.charset.StandardCharsets
 
 object Utilities {
-    private val plugin=CustomToasts.instance
-    fun loadToasts(): Boolean {
+    private val plugin=CTA.instance
+    fun loadToasts(name:String?=null): Boolean {
         plugin.reloadConfig()
         try {
+
             for (toast in toastList()) {
-                val file=File("${plugin.dataFolder}/advancement", toast)
-                if (toast.endsWith(".json")) load(FileType.JSON, file)
-                if (toast.endsWith(".yml")) load(FileType.YML, file)
+                if (name==null) {
+                    val file = File("${plugin.dataFolder}/advancement", toast)
+                    if (toast.endsWith(".json")) load(FileType.JSON, file)
+                    if (toast.endsWith(".yml")) load(FileType.YML, file)
+                } else {
+                    if (toast.contains(name)) {
+                        val file = File("${plugin.dataFolder}/advancement", toast)
+                        if (toast.endsWith(".json")) load(FileType.JSON, file)
+                        if (toast.endsWith(".yml")) load(FileType.YML, file)
+                    }
+                }
+
             }
             return true
         } catch (e:Exception) {
@@ -64,27 +74,17 @@ object Utilities {
                 for (name in criteriaSection.getKeys(false)) {
                     val dataMap = criteriaSection.getConfigurationSection(name)?.getValues(false) ?: continue
                     val trigger = Trigger.getByTrigger(dataMap["trigger"].toString()) ?: return
-                    val conditionsJson = JsonObject()
-                    println(name)
-
-                    println(dataMap["conditions"])
-                    if (dataMap["conditions"] is Map<*, *>) {
-                        val conditions = dataMap["conditions"] as Map<*, *>
-                        conditions.forEach { (key, value) ->
-                            when (value) {
-                                is Map<*, *> -> {
-                                    val innerJson = JsonObject()
-                                    value.forEach { (k, v) ->
-                                        innerJson.addProperty(k.toString(), v.toString())
-                                    }
-                                    conditionsJson.add(key.toString(), innerJson)
-                                }
-                                else -> conditionsJson.addProperty(key.toString(), value.toString())
-                            }
-                        }
+                    val conditions = when (val rawConditions = dataMap["conditions"]) {
+                        is Map<*, *> -> rawConditions as Map<String, Any>
+                        is MemorySection -> rawConditions.getValues(false)
+                        else -> emptyMap()
                     }
 
-                    criteria.add(Criteria(name, trigger, conditionsJson))
+//                    println(dataMap)
+
+                    criteria.add(Criteria(name, trigger, Gson().toJsonTree(conditions).asJsonObject))/*.also { println(
+                        name+trigger+Gson().toJsonTree(conditions).asJsonObject
+                    ) }*/
                 }
 
                 ToastBuilder(
@@ -97,7 +97,6 @@ object Utilities {
             FileType.JSON-> {
                 val content=file.readText(StandardCharsets.UTF_8)
                 val key=NamespacedKey(plugin, fileName)
-//                println(key)
                 try {
                     plugin.server.unsafe.loadAdvancement(key, content)
                 } catch (e:IllegalArgumentException) {

@@ -1,4 +1,4 @@
-package kr.apo2073.customToasts.enums
+package kr.apo2073.ctadvancement.enums
 
 enum class Trigger(
     private val trigger:String

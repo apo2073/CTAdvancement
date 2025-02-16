@@ -1,12 +1,12 @@
-package kr.apo2073.customToasts.toasts
+package kr.apo2073.ctadvancement.toasts
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import kr.apo2073.customToasts.enums.Frame
-import kr.apo2073.customToasts.enums.Trigger
-import kr.apo2073.customToasts.utilities.Criteria
-import kr.apo2073.customToasts.utilities.Reward
+import kr.apo2073.ctadvancement.enums.Frame
+import kr.apo2073.ctadvancement.enums.Trigger
+import kr.apo2073.ctadvancement.utilities.Criteria
+import kr.apo2073.ctadvancement.utilities.Reward
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -100,11 +100,13 @@ class ToastBuilder(
         if (requirements==null) requirements= arrayListOf(
             Criteria("empties", Trigger.IMPOSSIBLE, null)
         )
-        val requireArray=JsonArray()
+        val requireArray = JsonArray()
+        val criteriaObject = JsonObject()
         requirements?.forEach {
-            json.add("criteria", it.getJson())
+            criteriaObject.add(it.getName(), it.getJson())
             requireArray.add(it.getName())
         }
+        json.add("criteria", criteriaObject)
         json.add("requirements", JsonArray().apply { add(requireArray) })
 
         val reward = JsonObject()
@@ -120,6 +122,6 @@ class ToastBuilder(
         }
         json.add("rewards", reward)
 
-        return GsonBuilder().setPrettyPrinting().create().toJson(json)
+        return GsonBuilder().setPrettyPrinting().create().toJson(json)/*.also { println(it)}*/
     }
 }

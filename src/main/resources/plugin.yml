@@ -1,12 +1,19 @@
 name: CTAdvancement
-version: '1.0'
-main: kr.apo2073.customToasts.CustomToasts
+version: ${version}
+main: kr.apo2073.ctadvancement.CTA
 api-version: '1.20'
 authors: [ 아포칼립스 ]
 commands:
-  toast:
-  reloadToasts:
-    description: 커스텀 도전과제 리로드 명령어
+  cta:
+    description: CTAdvancement 기본 명령어
+
+permissions:
+  apo.cta.*:
+    children:
+      apo.cta.reload:
+        default: op
+      apo.cta.load:
+        default: op
 
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10
