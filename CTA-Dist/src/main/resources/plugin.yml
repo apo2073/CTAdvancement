@@ -16,6 +16,8 @@ permissions:
         default: op
       apo.cta.remove:
         default: op
+      apo.cta.show:
+        default: op
 
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.10

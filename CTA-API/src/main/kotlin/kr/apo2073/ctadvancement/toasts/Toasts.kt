@@ -1,6 +1,5 @@
 package kr.apo2073.ctadvancement.toasts
 
-import kr.apo2073.ctadvancement.CTAAPI
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -23,7 +22,7 @@ open class Toasts {
     }
 
     fun remove():Toasts {
-        builder.plugin.server.unsafe.removeAdvancement(NamespacedKey(CTAAPI.plugin,
+        builder.plugin.server.unsafe.removeAdvancement(NamespacedKey(builder.plugin,
             if (isBuilder()) { builder.name } else {name}
         ))
         return this
@@ -45,7 +44,7 @@ open class Toasts {
         builder.requirements?.forEach {
             player.getAdvancementProgress(
                 Bukkit.getAdvancement(if (isBuilder()) { builder.key}
-                else {NamespacedKey(CTAAPI.plugin, name)}) ?: return
+                else {NamespacedKey(builder.plugin, name)}) ?: return
             ).awardCriteria(it.getName())
         }
     }
@@ -54,7 +53,7 @@ open class Toasts {
         builder.requirements?.forEach {
             player.getAdvancementProgress(
                 Bukkit.getAdvancement(if (isBuilder()) { builder.key}
-                else {NamespacedKey(CTAAPI.plugin, name)}) ?: return
+                else {NamespacedKey(builder.plugin, name)}) ?: return
             ).revokeCriteria(it.getName())
         }
     }

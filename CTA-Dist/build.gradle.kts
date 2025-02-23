@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "kr.apo2073"
-version = "1.0"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -41,5 +41,11 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-
+    archiveFileName.set("CTadvancement.jar")
+    archiveClassifier.set("all")
+    mergeServiceFiles()
+    dependencies {
+        include(project(":CTA-API"))
+    }
+    destinationDirectory=file("C:\\Users\\PC\\Desktop\\CustomToasts\\server\\plugins")
 }

@@ -38,7 +38,3 @@ tasks.processResources {
         expand(props)
     }
 }
-
-tasks.jar {
-    destinationDirectory=file("C:\\Users\\PC\\Desktop\\CustomToasts\\server\\plugins")
-}

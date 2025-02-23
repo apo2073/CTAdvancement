@@ -3,7 +3,6 @@ package kr.apo2073.ctadvancement.toasts
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import kr.apo2073.ctadvancement.CTAAPI
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
 import kr.apo2073.ctadvancement.utilities.Criteria
@@ -47,7 +46,7 @@ class ToastBuilder(
     private var rewards: MutableList<Reward>?=null,
     private var background:String?="minecraft:textures/gui/advancements/backgrounds/adventure.png"
 ) {
-    var key=NamespacedKey(CTAAPI.plugin, name)
+    var key=NamespacedKey(plugin, name)
         private set
     fun build():Toasts {
 //        println(toastJson())
