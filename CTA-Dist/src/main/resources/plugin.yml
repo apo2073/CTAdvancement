@@ -2,7 +2,7 @@ name: CTAdvancement
 version: ${version}
 main: kr.apo2073.ctadvancement.CTA
 api-version: '1.20'
-authors: [ 아포칼립스 ]
+authors: [아포칼립스]
 commands:
   cta:
     description: CTAdvancement 기본 명령어

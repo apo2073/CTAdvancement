@@ -3,6 +3,7 @@ package kr.apo2073.ctadvancement.toasts
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import kr.apo2073.ctadvancement.CTAAPI
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
 import kr.apo2073.ctadvancement.utilities.Criteria
@@ -14,9 +15,26 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 // https://misode.github.io/advancement/
+/**
+ * @param plugin Your Own Plugin
+ * @param name The name of toast
+ * @param icon Item to set Icon
+ * @param title Advancement title
+ * @param description Description of advancement
+ * @param frame Frame of advancement
+ * @param showToasts Is show advancement clear alert
+ * @param announceToChat Is show advancement clear
+ * @param hidden Is the advancement hidden
+ * @param parent Parent of advancement
+ * @param requirements Advancement Requirements to grant it
+ * @param rewards Rewards of advancement
+ * @param background Background of advancement
+ *
+ * @return Custom Toasts
+ * */
 class ToastBuilder(
-    private val plugin:JavaPlugin,
-    private val key: NamespacedKey,
+    internal val plugin:JavaPlugin,
+    internal val name: String,
     private val icon: ItemStack,
     private val title: String,
     private val description: String,
@@ -25,23 +43,13 @@ class ToastBuilder(
     private var announceToChat:Boolean=true,
     private var hidden:Boolean=false,
     private var parent:String?=null,
-    private var requirements: MutableList<Criteria>?=null,
+    internal var requirements: MutableList<Criteria>?=null,
     private var rewards: MutableList<Reward>?=null,
     private var background:String?="minecraft:textures/gui/advancements/backgrounds/adventure.png"
 ) {
-    fun show(player: Player):ToastBuilder {
-        try {
-            grantAdvancement(player)
-            Bukkit.getScheduler().runTaskLater(plugin, Runnable {
-                revokeAdvancement(player)
-            }, 20L)
-        } catch (e:IllegalArgumentException ) {
-            return this
-        } catch (e:Exception) {e.printStackTrace()}
-        return this
-    }
-
-    fun build():ToastBuilder {
+    var key=NamespacedKey(CTAAPI.plugin, name)
+        private set
+    fun build():Toasts {
 //        println(toastJson())
         try {
             plugin.server.unsafe.loadAdvancement(key, toastJson())
@@ -49,30 +57,9 @@ class ToastBuilder(
             plugin.server.unsafe.removeAdvancement(key)
             Bukkit.reloadData()
             plugin.server.unsafe.loadAdvancement(key, toastJson())
-            return this
+            return Toasts(this)
         }
-        return this
-    }
-
-    fun remove():ToastBuilder {
-        plugin.server.unsafe.removeAdvancement(key)
-        return this
-    }
-
-    private fun grantAdvancement(player: Player) {
-        requirements?.forEach {
-            player.getAdvancementProgress(
-                Bukkit.getAdvancement(key) ?: return
-            ).awardCriteria(it.getName())
-        }
-    }
-
-    private fun revokeAdvancement(player: Player) {
-        requirements?.forEach {
-            player.getAdvancementProgress(
-                Bukkit.getAdvancement(key) ?: return
-            ).revokeCriteria(it.getName())
-        }
+        return Toasts(this)
     }
 
     private fun toastJson():String {

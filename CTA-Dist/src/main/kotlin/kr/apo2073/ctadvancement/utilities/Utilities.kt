@@ -5,6 +5,7 @@ import kr.apo2073.ctadvancement.CTA
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
 import kr.apo2073.ctadvancement.toasts.ToastBuilder
+import kr.apo2073.ctadvancement.toasts.Toasts
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -53,7 +54,7 @@ object Utilities {
         when(type) {
             FileType.YML-> {
                 val config=YamlConfiguration.loadConfiguration(file)
-                val key=NamespacedKey(plugin, config.getString("${fileName}.id") ?: return)
+                val name=config.getString("${fileName}.id") ?: return
                 val icon= getItemStack(config.getString("${fileName}.icon") ?: return) ?: return
                 val title=config.getString("${fileName}.title") ?: return
                 val description=config.getString("${fileName}.description") ?: return
@@ -88,7 +89,7 @@ object Utilities {
                 }
 
                 ToastBuilder(
-                    plugin, key,
+                    plugin, name,
                     icon, title, description, frame,
                     showToasts, announceToChat, hidden,
                     parent, criteria, arrayListOf(reward), background

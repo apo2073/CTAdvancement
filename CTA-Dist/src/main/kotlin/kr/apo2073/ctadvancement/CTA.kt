@@ -20,3 +20,4 @@ class CTA : JavaPlugin() {
         loadToasts()
     }
 }
+
