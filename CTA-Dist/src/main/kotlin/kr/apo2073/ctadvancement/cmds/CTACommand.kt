@@ -1,7 +1,9 @@
 package kr.apo2073.ctadvancement.cmds
 
 import kr.apo2073.ctadvancement.toasts.Toasts
+import kr.apo2073.ctadvancement.utilities.LangManager.translate
 import kr.apo2073.ctadvancement.utilities.Utilities.loadToasts
+import kr.apo2073.ctadvancement.utilities.sendMessage
 import kr.apo2073.ctadvancement.utilities.str2Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -29,7 +31,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
         if (p3.size==1) {
             if (p3[0]=="reload") {
                 if (!p0.hasPermission("apo.cta.reload")) {
-                    p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+                    p0.sendMessage(translate("command.no.permissions"), true)
                     return true
                 }
                 if (loadToasts()) {
@@ -94,7 +96,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
 
     private fun loadToast(p0: CommandSender, toast: String) {
         if (!p0.hasPermission("apo.cta.load")) {
-            p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+            p0.sendMessage(translate("command.no.permissions"), true)
             return
         }
         if (loadToasts(toast)) {
@@ -106,7 +108,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
 
     private fun removeToast(p0: CommandSender, toast: String) {
         if (!p0.hasPermission("apo.cta.remove")) {
-            p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+            p0.sendMessage(translate("command.no.permissions"), true)
             return
         }
         try {
@@ -125,7 +127,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
 
     private fun showToast(p0: CommandSender, toast: String, player: Player) {
         if (!p0.hasPermission("apo.cta.show")) {
-            p0.sendMessage(prefix.append("권한이 부족합니다!".str2Component()))
+            p0.sendMessage(translate("command.no.permissions"), true)
             return
         }
         try {

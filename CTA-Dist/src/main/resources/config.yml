@@ -1,3 +1,5 @@
+lang: ko
+
 advancement:
   - finally_end.yml
   - test.json
