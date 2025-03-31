@@ -44,7 +44,8 @@ class ToastBuilder(
     private var parent:String?=null,
     internal var requirements: MutableList<Criteria>?=null,
     private var rewards: MutableList<Reward>?=null,
-    private var background:String?="minecraft:textures/gui/advancements/backgrounds/adventure.png"
+    private var background:String?="minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    private var sendsTelemetryEvent:Boolean?=false
 ) {
     var key=NamespacedKey(plugin, name)
         private set
@@ -107,6 +108,7 @@ class ToastBuilder(
             it.getExp()?.let { reward.addProperty("experience", it) }
         }
         json.add("rewards", reward)
+        json.addProperty("sends_telemetry_event", sendsTelemetryEvent)
 
         return GsonBuilder().setPrettyPrinting().create().toJson(json)/*.also { println(it)}*/
     }

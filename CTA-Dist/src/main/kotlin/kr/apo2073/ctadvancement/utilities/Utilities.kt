@@ -72,6 +72,7 @@ object Utilities {
                 )
                 val criteria = mutableListOf<Criteria>()
                 val criteriaSection = config.getConfigurationSection("${fileName}.criteria") ?: return
+                val sendsTelemetryEvent=config.getBoolean("${fileName}.sends_telemetry_event")
                 for (name in criteriaSection.getKeys(false)) {
                     val dataMap = criteriaSection.getConfigurationSection(name)?.getValues(false) ?: continue
                     val trigger = Trigger.getByTrigger(dataMap["trigger"].toString()) ?: return
@@ -92,7 +93,8 @@ object Utilities {
                     plugin, name,
                     icon, title, description, frame,
                     showToasts, announceToChat, hidden,
-                    parent, criteria, arrayListOf(reward), background
+                    parent, criteria, arrayListOf(reward), background,
+                    sendsTelemetryEvent
                 ).build()
             }
             FileType.JSON-> {

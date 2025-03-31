@@ -3,8 +3,8 @@
     "icon": {
       "item": "minecraft:arrow"
     },
-    "title": "테스트용",
-    "description": "테스트용입니다",
+    "title": "test",
+    "description": "for test",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,

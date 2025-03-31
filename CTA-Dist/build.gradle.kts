@@ -47,5 +47,5 @@ tasks.shadowJar {
     dependencies {
         include(project(":CTA-API"))
     }
-    destinationDirectory=file("C:\\Users\\PC\\Desktop\\CustomToasts\\server\\plugins")
+//    destinationDirectory=file("C:\\Users\\PC\\Desktop\\CustomToasts\\server\\plugins")
 }
