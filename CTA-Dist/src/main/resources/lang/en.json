@@ -1,0 +1,12 @@
+{
+"command.no.permissions": "&cYou are not authorized to run this command",
+"command.reload.suc": "§Load completed successfully",
+"command.reload.fail": "§lAn error occurred during reload!",
+"command.error": "§lAn error occurred while executing the command",
+"command.usage": "§lPlease enter the correct command|§l ⌊ §7/cta reload §f- Reloads a custom achievement|§l ⌊ §7/cta load [<string>] §f- Removes a custom achievement [<string>] from the game|§l ⌊ §7/cta remove [<string>] §f- Removes a custom achievement [<string>]. Removes custom achievement [<string>]|§l ⌊ §7/cta show [<string>] [<player>] §f- Shows custom achievement [<string>] to [<player>]",
+
+"cant.found.advancement": "§lThe achievement does not exist",
+"cant.found.player": "§lThe corresponding player does not exist",
+"advancement.remove.suc": "§lRemoval was successful",
+"advancement.remove.fail": "§lAn error occurred during uninstallation."
+}
