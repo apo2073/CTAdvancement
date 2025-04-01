@@ -22,7 +22,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
         }
     }
 
-    private val prefix= MiniMessage.miniMessage().deserialize("<b><gradient:#DBCDF0:#8962C3>[ CTAdvancement ]</gradient></b> ")
+    private val prefix= MiniMessage.miniMessage().deserialize("<b><gradient:#DBCDF0:#8962C3>[ CTA ]</gradient></b> ")
 
     override fun onCommand(p0: CommandSender, p1: Command, p2: String, p3: Array<out String>): Boolean {
         if (p3.isEmpty()) {
@@ -35,9 +35,9 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
                     return true
                 }
                 if (loadToasts()) {
-                    p0.sendMessage(prefix.append("§l리로드를 완료했습니다".str2Component()))
+                    p0.sendMessage(translate("command.reload.suc"), true)
                 } else {
-                    p0.sendMessage(prefix.append("§l리로드 중 오류가 발생했습니다!".str2Component()))
+                    p0.sendMessage(translate("command.reload.fail"), true)
                 }
             } else {
                 sendUsage(p0)
@@ -51,7 +51,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
             val list= plugin.config.getStringList("advancement")
             val advancement=p3[1]
             if (advancement !in list) {
-                p0.sendMessage(prefix.append("§l해당 도전과제가 존재하지 않습니다".str2Component()))
+                p0.sendMessage(translate("cant.found.advancement"), true)
                 return true
             }
             when(p3[0]) {
@@ -67,11 +67,11 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
             val list= plugin.config.getStringList("advancement")
             val advancement=p3[1]
             if (advancement !in list) {
-                p0.sendMessage(prefix.append("§l해당 도전과제가 존재하지 않습니다".str2Component()))
+                p0.sendMessage(translate("cant.found.advancement"), true)
                 return true
             }
             val player=plugin.server.getPlayer(p3[2]) ?: run {
-                p0.sendMessage(prefix.append("§l해당 플레이어가 존재하지 않습니다".str2Component()))
+                p0.sendMessage(translate("cant.found.player"), true)
                 return true
             }
             showToast(p0, advancement, player)
@@ -80,13 +80,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
     }
 
     private fun sendUsage(p0: CommandSender) {
-        val message= arrayOf(
-            "§l올바른 명령어를 입력해 주세요",
-            "§l ⌊ §7/cta reload §f- 커스텀 도전과제를 리로드 합니다",
-            "§l ⌊ §7/cta load [<string>] §f- 커스텀 도전과제 [<string>]을(를) 로드 합니다",
-            "§l ⌊ §7/cta remove [<string>] §f- 커스텀 도전과제 [<string>]을(를) 제거 합니다",
-            "§l ⌊ §7/cta show [<string>] [<player>] §f- 커스텀 도전과제 [<string>]을(를) [<player>]에게 보여줍니다"
-        )
+        val message= translate("command.usage").split("|")
         message.forEach {
             p0.sendMessage(prefix.append(
                 it.str2Component()
@@ -100,9 +94,9 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
             return
         }
         if (loadToasts(toast)) {
-            p0.sendMessage(prefix.append("§l로드를 완료했습니다".str2Component()))
+            p0.sendMessage(translate("command.reload.suc"), true)
         } else {
-            p0.sendMessage(prefix.append("§l로드 중 오류가 발생했습니다!".str2Component()))
+            p0.sendMessage(translate("command.reload.fail"), true)
         }
     }
 
@@ -118,9 +112,9 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
                     .replace(".yml", ""))
             )
             Bukkit.reloadData()
-            p0.sendMessage(prefix.append("§l제거를 완료했습니다".str2Component()))
+            p0.sendMessage(translate("advancement.remove.suc"), true)
         } catch (e: Exception) {
-            p0.sendMessage(prefix.append("§l제거 중 오류가 발생했습니다".str2Component()))
+            p0.sendMessage(translate("advancement.remove.fail"), true)
             e.printStackTrace()
         }
     }
@@ -134,7 +128,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
             val toasts=Toasts(toast)
             toasts.show(player)
         } catch (e: Exception) {
-            p0.sendMessage(prefix.append("§l명령어를 실행하던 도중 오류가 발생했습니다".str2Component()))
+            p0.sendMessage(translate("command.error"), true)
             e.printStackTrace()
         }
     }
