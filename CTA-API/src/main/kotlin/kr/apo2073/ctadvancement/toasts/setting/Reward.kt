@@ -1,4 +1,4 @@
-package kr.apo2073.ctadvancement.utilities
+package kr.apo2073.ctadvancement.toasts.setting
 
 import org.bukkit.inventory.ItemStack
 

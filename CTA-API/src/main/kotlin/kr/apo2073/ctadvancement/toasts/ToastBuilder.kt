@@ -5,11 +5,12 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
-import kr.apo2073.ctadvancement.utilities.Criteria
-import kr.apo2073.ctadvancement.utilities.Reward
+import kr.apo2073.ctadvancement.toasts.setting.Criteria
+import kr.apo2073.ctadvancement.toasts.setting.Icons
+import kr.apo2073.ctadvancement.toasts.setting.Reward
+import kr.apo2073.ctadvancement.utilities.VersionManager
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -34,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin
 class ToastBuilder(
     internal val plugin:JavaPlugin,
     internal val name: String,
-    private val icon: ItemStack,
+    private val icon: Icons,
     private val title: String,
     private val description: String,
     private val frame:Frame,
@@ -68,10 +69,7 @@ class ToastBuilder(
         val json=JsonObject()
 
         val display=JsonObject()
-        display.add(
-            "icon",
-            JsonObject().apply { addProperty("item", icon.type.key.toString()) }
-        )
+        display.add("icon", icon.generate())
         display.addProperty("title", title)
         display.addProperty("description", description)
         display.addProperty("background", background)

@@ -16,6 +16,8 @@ class CTA : JavaPlugin() {
 
         saveResource("advancement/test.json", false)
         saveResource("advancement/finally_end.yml", false)
+        saveResource("lang/en.json", true)
+        saveResource("lang/ko.json", true)
 
         loadToasts()
     }

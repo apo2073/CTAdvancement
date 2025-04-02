@@ -5,7 +5,9 @@ import kr.apo2073.ctadvancement.CTA
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
 import kr.apo2073.ctadvancement.toasts.ToastBuilder
-import kr.apo2073.ctadvancement.toasts.Toasts
+import kr.apo2073.ctadvancement.toasts.setting.Criteria
+import kr.apo2073.ctadvancement.toasts.setting.Icons
+import kr.apo2073.ctadvancement.toasts.setting.Reward
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -55,7 +57,17 @@ object Utilities {
             FileType.YML-> {
                 val config=YamlConfiguration.loadConfiguration(file)
                 val name=config.getString("${fileName}.id") ?: return
-                val icon= getItemStack(config.getString("${fileName}.icon") ?: return) ?: return
+                val itemId = config.getString("${fileName}.icon.id") ?: return
+                val itemStack = getItemStack(itemId) ?: return
+                val icon = Icons(itemStack).apply {
+                    config.getString("${fileName}.icon.nbt")?.let { setNbt(it) }
+
+                    config.getConfigurationSection("${fileName}.icon.component")?.let { component ->
+                        component.getValues(false).forEach { (key, value) ->
+                            addComponent(key, value.toString())
+                        }
+                    }
+                }
                 val title=config.getString("${fileName}.title") ?: return
                 val description=config.getString("${fileName}.description") ?: return
                 val frame=Frame.valueOf(config.getString("${fileName}.frame") ?: return)
@@ -64,7 +76,7 @@ object Utilities {
                 val hidden=config.getBoolean("${fileName}.hidden")
                 val parent=config.getString("${fileName}.parent") ?: return
                 val background=config.getString("${fileName}.background")
-                val reward=Reward(
+                val reward= Reward(
                     experience = config.getInt("${fileName}.rewards.experience"),
                     function = config.getString("${fileName}.rewards.function"),
                     loots = config.getStringList("${fileName}.rewards.loots"),
@@ -81,12 +93,7 @@ object Utilities {
                         is MemorySection -> rawConditions.getValues(false)
                         else -> emptyMap()
                     }
-
-//                    println(dataMap)
-
-                    criteria.add(Criteria(name, trigger, Gson().toJsonTree(conditions).asJsonObject))/*.also { println(
-                        name+trigger+Gson().toJsonTree(conditions).asJsonObject
-                    ) }*/
+                    criteria.add(Criteria(name, trigger, Gson().toJsonTree(conditions).asJsonObject))
                 }
 
                 ToastBuilder(

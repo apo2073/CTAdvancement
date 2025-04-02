@@ -47,5 +47,8 @@ tasks.shadowJar {
     dependencies {
         include(project(":CTA-API"))
     }
+    minimize {
+        exclude("kr.apo2073/**")
+    }
 //    destinationDirectory=file("C:\\Users\\PC\\Desktop\\CustomToasts\\server\\plugins")
 }
