@@ -2,10 +2,10 @@ finally_end:
   id: "finally_end"
   icon:
     item: "minecraft:ender_eye"
-    nbt: "" # 1.21 under
-    component:   # 1.21 over
-      "minecraft:rarity": "rare"
-      "minecraft:break_sound": "minecraft:ambient.nether_wastes.loop"
+#    nbt: "" # 1.21 under
+#    component:   # 1.21 over
+#      "minecraft:rarity": "rare"
+#      "minecraft:break_sound": "minecraft:ambient.nether_wastes.loop"
 #  title: "천 리 길도 한 걸음부터"
 #  description: "엔더의 눈을 던져, 마지막으로 향하세요."
   title: "For the first and last time"

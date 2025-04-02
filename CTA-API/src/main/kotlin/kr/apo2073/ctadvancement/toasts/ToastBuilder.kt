@@ -69,6 +69,7 @@ class ToastBuilder(
         val json=JsonObject()
 
         val display=JsonObject()
+        println(VersionManager.isV1_21())
         display.add("icon", icon.generate())
         display.addProperty("title", title)
         display.addProperty("description", description)
