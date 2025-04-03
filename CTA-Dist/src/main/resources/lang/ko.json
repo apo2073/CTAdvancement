@@ -3,8 +3,8 @@
   "command.reload.suc": "§l리로드를 완료했습니다",
   "command.reload.fail": "§l리로드 중 오류가 발생했습니다!",
   "command.error": "§l명령어를 실행하던 도중 오류가 발생했습니다",
-  "command.usage": "§l올바른 명령어를 입력해 주세요|§l ⌊ §7/cta reload §f- 커스텀 도전과제를 리로드 합니다|§l ⌊ §7/cta load [<string>] §f- 커스텀 도전과제 [<string>]을(를) 로드 합니다|§l ⌊ §7/cta remove [<string>] §f- 커스텀 도전과제 [<string>]을(를) 제거 합니다|§l ⌊ §7/cta show [<string>] [<player>] §f- 커스텀 도전과제 [<string>]을(를) [<player>]에게 보여줍니다",
-
+  "command.usage": "§l올바른 명령어를 입력해 주세요|§l ⌊ §7/cta reload §f- 커스텀 도전과제를 리로드 합니다|§l ⌊ §7/cta load [<string>] §f- 커스텀 도전과제 [<string>]을(를) 로드 합니다|§l ⌊ §7/cta remove [<string>] §f- 커스텀 도전과제 [<string>]을(를) 제거 합니다",
+  ,
   "cant.found.advancement": "§l해당 도전과제가 존재하지 않습니다",
   "cant.found.player": "§l해당 플레이어가 존재하지 않습니다",
   "advancement.remove.suc": "§l제거를 완료했습니다",

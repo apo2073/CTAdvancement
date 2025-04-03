@@ -3,58 +3,53 @@ package kr.apo2073.ctadvancement.toasts
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
-import javax.naming.Name
+import java.io.File
 
 open class Toasts {
-    private lateinit var builder: ToastBuilder
-    private lateinit var name: String
+    private var builder: ToastBuilder? = null
+    private var name: String? = null
 
     internal constructor(toastBuilder: ToastBuilder) {
-        this.builder=toastBuilder
-
+        this.builder = toastBuilder
     }
+
     constructor(name: String) {
-        this.name=name
+        this.name = name
     }
 
-    private fun isBuilder():Boolean {
-        return (::builder.isInitialized && !::name.isInitialized)
-    }
+    fun isBuilder(): Boolean = builder != null
 
-    fun remove():Toasts {
-        builder.plugin.server.unsafe.removeAdvancement(NamespacedKey(builder.plugin,
-            if (isBuilder()) { builder.name } else {name}
-        ))
+    fun remove(): Toasts {
+        val key = if (isBuilder()) builder!!.name else name ?: return this
+        val plugin = if (isBuilder()) builder!!.plugin else Bukkit.getPluginManager().getPlugin("CTAdvancement") ?: return this
+        plugin.server.unsafe.removeAdvancement(NamespacedKey(plugin, key))
         return this
     }
 
-    fun show(player: Player):Toasts {
+    fun show(player: Player): Toasts {
         try {
             grantAdvancement(player)
-            Bukkit.getScheduler().runTaskLater(builder.plugin, Runnable {
-                revokeAdvancement(player)
-            }, 20L)
-        } catch (e:IllegalArgumentException ) {
+            val plugin = if (isBuilder()) builder!!.plugin else Bukkit.getPluginManager().getPlugin("CTAdvancement") ?: return this
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable { revokeAdvancement(player) }, 20L)
+        } catch (e: IllegalArgumentException) {
             return this
-        } catch (e:Exception) {e.printStackTrace()}
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return this
     }
 
     fun grantAdvancement(player: Player) {
-        builder.requirements?.forEach {
-            player.getAdvancementProgress(
-                Bukkit.getAdvancement(if (isBuilder()) { builder.key}
-                else {NamespacedKey(builder.plugin, name)}) ?: return
-            ).awardCriteria(it.getName())
-        }
+        val key = if (isBuilder()) builder!!.key else NamespacedKey(Bukkit.getPluginManager().getPlugin("CTAdvancement") ?: return, name ?: return)
+        val advancement = Bukkit.getAdvancement(key) ?: return
+        val requirements = builder?.requirements ?: return
+        requirements.forEach { player.getAdvancementProgress(advancement).awardCriteria(it.getName()) }
     }
 
     fun revokeAdvancement(player: Player) {
-        builder.requirements?.forEach {
-            player.getAdvancementProgress(
-                Bukkit.getAdvancement(if (isBuilder()) { builder.key}
-                else {NamespacedKey(builder.plugin, name)}) ?: return
-            ).revokeCriteria(it.getName())
-        }
+        val key = if (isBuilder()) builder!!.key else NamespacedKey(Bukkit.getPluginManager().getPlugin("CTAdvancement") ?: return, name ?: return)
+        val advancement = Bukkit.getAdvancement(key) ?: return
+        val requirements = builder?.requirements ?: return
+        requirements.forEach { player.getAdvancementProgress(advancement).revokeCriteria(it.getName()) }
     }
 }

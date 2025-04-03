@@ -121,6 +121,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
 
     private fun showToast(p0: CommandSender, toast: String, player: Player) {
         if (!p0.hasPermission("apo.cta.show")) {
+            //|§l ⌊ §7/cta show [<string>] [<player>] §f- 커스텀 도전과제 [<string>]을(를) [<player>]에게 보여줍니다
             p0.sendMessage(translate("command.no.permissions"), true)
             return
         }
@@ -144,7 +145,7 @@ class CTACommand(private val plugin: JavaPlugin): TabExecutor {
             tab.add("reload")
             tab.add("load")
             tab.add("remove")
-            tab.add("show")
+//            tab.add("show")
         }
         if (p3.size==2 && (p3[0] == "load" || p3[0] == "remove" || p3[0] == "show")) {
             val list= plugin.config.getStringList("advancement")

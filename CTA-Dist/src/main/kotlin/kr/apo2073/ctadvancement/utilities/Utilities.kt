@@ -5,6 +5,7 @@ import kr.apo2073.ctadvancement.CTA
 import kr.apo2073.ctadvancement.enums.Frame
 import kr.apo2073.ctadvancement.enums.Trigger
 import kr.apo2073.ctadvancement.toasts.ToastBuilder
+import kr.apo2073.ctadvancement.toasts.Toasts
 import kr.apo2073.ctadvancement.toasts.setting.Criteria
 import kr.apo2073.ctadvancement.toasts.setting.Icons
 import kr.apo2073.ctadvancement.toasts.setting.Reward
@@ -20,27 +21,31 @@ import java.nio.charset.StandardCharsets
 object Utilities {
     private val plugin=CTA.instance
     fun loadToasts(name:String?=null): Boolean {
-        plugin.reloadConfig()
-        try {
+        return getToasts(name)!=null
+    }
 
+    fun getToasts(name: String?=null):Toasts? {
+        plugin.reloadConfig()
+        var advancement:Toasts?=null
+        try {
             for (toast in toastList()) {
                 if (name==null) {
                     val file = File("${plugin.dataFolder}/advancement", toast)
-                    if (toast.endsWith(".json")) load(FileType.JSON, file)
-                    if (toast.endsWith(".yml")) load(FileType.YML, file)
+                    if (toast.endsWith(".json")) advancement= load(FileType.JSON, file)
+                    if (toast.endsWith(".yml")) advancement=load(FileType.YML, file)
                 } else {
                     if (toast.contains(name)) {
                         val file = File("${plugin.dataFolder}/advancement", toast)
-                        if (toast.endsWith(".json")) load(FileType.JSON, file)
-                        if (toast.endsWith(".yml")) load(FileType.YML, file)
+                        if (toast.endsWith(".json")) advancement= load(FileType.JSON, file)
+                        if (toast.endsWith(".yml")) advancement=load(FileType.YML, file)
                     }
                 }
 
             }
-            return true
+            return advancement
         } catch (e:Exception) {
             e.printStackTrace()
-            return false
+            return null
         }
     }
 
@@ -49,16 +54,16 @@ object Utilities {
         return plugin.config.getStringList("advancement")
     }
 
-    private fun load(type: FileType, file: File) {
+    private fun load(type: FileType, file: File):Toasts? {
         val fileName=file.name
             .replace(".json", "")
             .replace(".yml", "")
         when(type) {
             FileType.YML-> {
                 val config=YamlConfiguration.loadConfiguration(file)
-                val name=config.getString("${fileName}.id") ?: return
-                val itemId = config.getString("${fileName}.icon.id") ?: return
-                val itemStack = getItemStack(itemId) ?: return
+                val name=config.getString("${fileName}.id") ?: return null
+                val itemId = config.getString("${fileName}.icon.id") ?: return null
+                val itemStack = getItemStack(itemId) ?: return null
                 val icon = Icons(itemStack).apply {
                     config.getString("${fileName}.icon.nbt")?.let { setNbt(it) }
 
@@ -68,13 +73,13 @@ object Utilities {
                         }
                     }
                 }
-                val title=config.getString("${fileName}.title") ?: return
-                val description=config.getString("${fileName}.description") ?: return
-                val frame=Frame.valueOf(config.getString("${fileName}.frame") ?: return)
+                val title=config.getString("${fileName}.title") ?: return null
+                val description=config.getString("${fileName}.description") ?: return null
+                val frame=Frame.valueOf(config.getString("${fileName}.frame") ?: return null)
                 val showToasts=config.getBoolean("${fileName}.show_toast")
                 val announceToChat=config.getBoolean("${fileName}.announce_to_chat")
                 val hidden=config.getBoolean("${fileName}.hidden")
-                val parent=config.getString("${fileName}.parent") ?: return
+                val parent=config.getString("${fileName}.parent") ?: return null
                 val background=config.getString("${fileName}.background")
                 val reward= Reward(
                     experience = config.getInt("${fileName}.rewards.experience"),
@@ -83,11 +88,11 @@ object Utilities {
                     recipes = config.getStringList("${fileName}.rewards.recipes").map { getItemStack(it) }
                 )
                 val criteria = mutableListOf<Criteria>()
-                val criteriaSection = config.getConfigurationSection("${fileName}.criteria") ?: return
+                val criteriaSection = config.getConfigurationSection("${fileName}.criteria") ?: return null
                 val sendsTelemetryEvent=config.getBoolean("${fileName}.sends_telemetry_event")
                 for (name in criteriaSection.getKeys(false)) {
                     val dataMap = criteriaSection.getConfigurationSection(name)?.getValues(false) ?: continue
-                    val trigger = Trigger.getByTrigger(dataMap["trigger"].toString()) ?: return
+                    val trigger = Trigger.getByTrigger(dataMap["trigger"].toString()) ?: return null
                     val conditions = when (val rawConditions = dataMap["conditions"]) {
                         is Map<*, *> -> rawConditions as Map<String, Any>
                         is MemorySection -> rawConditions.getValues(false)
@@ -116,6 +121,7 @@ object Utilities {
                 }
             }
         }
+        return null
     }
 
     private fun getItemStack(key:String) : ItemStack? {
